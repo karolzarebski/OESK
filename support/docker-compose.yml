@@ -16,7 +16,11 @@ services:
     networks:
       neoNet:
         ipv4_address: 192.168.0.2
-
+ 
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
   # backend:
   #   container_name: NeoChessBackend
   #   build: 
