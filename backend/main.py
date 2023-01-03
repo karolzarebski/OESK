@@ -71,7 +71,7 @@ def add_measurement():
         now = datetime.now()
         data['measurement_time'] = now.time()
         data['measurement_date'] = now.date()
-        data['test_duration'] = test_service.test(data['language'], data['fibonacci_count'])
+        data['test_duration'] = test_service.run_test(data['language'], data['fibonacci_count'])
         database_service.add_measurement(data)
         return make_response(jsonify(data), 200)
     except Exception as ex:
