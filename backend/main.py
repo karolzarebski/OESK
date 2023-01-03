@@ -6,13 +6,15 @@ from datetime import datetime
 from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
 
-from database_service import DatabaseService
+from services.database_service import DatabaseService
+from services.test_service import TestService
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 CORS(app)
 
 database_service = None
+test_service = None
 
 
 @app.route('/get', methods=['GET'])
@@ -69,10 +71,9 @@ def add_measurement():
         now = datetime.now()
         data['measurement_time'] = now.time()
         data['measurement_date'] = now.date()
+        data['test_duration'] = test_service.test(data['language'], data['fibonacci_count'])
         database_service.add_measurement(data)
-        return make_response({
-            "result": "successful"
-        }, 200)
+        return make_response(jsonify(data), 200)
     except Exception as ex:
         return make_response({
             "error": str(ex)
@@ -94,12 +95,15 @@ def delete_measurement():
 
 def create_instances():
     global database_service
+    global test_service
 
     with open("./appsettings.json") as configuration_file:
         configuration = json.load(configuration_file)
         database_configuration = configuration['database_configuration']
+        test_configuration = configuration['test_configuration']
 
     database_service = DatabaseService(database_configuration)
+    test_service = TestService(test_configuration)
 
     print("Created all instances")
 
