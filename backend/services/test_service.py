@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 
@@ -15,6 +16,6 @@ class TestService:
 
         start = datetime.now()
 
-        # run test
+        os.startfile(f"{path} > {fib_count}")
 
         return datetime.now() - start
