@@ -70,12 +70,11 @@ def add_measurement():
         data = request.get_json()
         if data['fibonacci_count'] <= 75:
             now = datetime.now()
-            data['measurement_time'] = now.time()
-            data['measurement_date'] = now.date()
+            data['measurement_time'] = str(now.time())
+            data['measurement_date'] = str(now.date())
             data['test_duration'] = test_service.run_test(data['language'], data['fibonacci_count'])
             database_service.add_measurement(data)
             return make_response(jsonify(data), 200)
-
         return make_response({
             "error": "Too much words"
         }, 400)

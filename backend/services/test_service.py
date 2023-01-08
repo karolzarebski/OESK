@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import datetime
 
 
@@ -16,6 +17,6 @@ class TestService:
 
         start = datetime.now()
 
-        os.startfile(f"{path} > {fib_count}")
+        os.system(f"{os.path.join(sys.path[0])}{path} {fib_count}")
 
-        return datetime.now() - start
+        return (datetime.now() - start).total_seconds()
