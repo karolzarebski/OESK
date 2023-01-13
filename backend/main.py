@@ -40,7 +40,6 @@ def get_all_measurements():
                     "error": "NotFound"
                 }, 404)
             return make_response(jsonify(measurement), 200)
-
         return make_response(jsonify(database_service.get_measurements()), 200)
     except Exception as ex:
         return make_response({
@@ -64,9 +63,8 @@ def get_dates():
 @app.route("/date", methods=['GET'])
 def get_by_date():
     try:
-        data = request.get_json()
         return make_response(
-            jsonify(database_service.get_by_date(datetime.strptime(data['date'], '%d/%m/%Y').date())),
+            jsonify(database_service.get_by_date(datetime.strptime(request.get_json()['date'], '%d/%m/%Y').date())),
             200
         )
     except Exception as ex:
