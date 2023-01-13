@@ -17,9 +17,30 @@ database_service = None
 test_service = None
 
 
+def get_language(language):
+    if language == "CSharp":
+        return "C#"
+    elif language == "Cpp":
+        return "C++"
+    return language
+
+
 @app.route('/get', methods=['GET'])
 def get_all_measurements():
     try:
+        language = request.args.get("language")
+        measurement_id = request.args.get("id")
+
+        if language is not None:
+            return make_response(jsonify(database_service.get_by_language(get_language(language))), 200)
+        if measurement_id is not None:
+            measurement = database_service.get_measurement(measurement_id)
+            if measurement is None:
+                return make_response({
+                    "error": "NotFound"
+                }, 404)
+            return make_response(jsonify(measurement), 200)
+
         return make_response(jsonify(database_service.get_measurements()), 200)
     except Exception as ex:
         return make_response({
@@ -48,16 +69,6 @@ def get_by_date():
             jsonify(database_service.get_by_date(datetime.strptime(data['date'], '%d/%m/%Y').date())),
             200
         )
-    except Exception as ex:
-        return make_response({
-            "error": str(ex)
-        }, 500)
-
-
-@app.route('/get/<int:measurement_id>')
-def get_measurement(measurement_id):
-    try:
-        return make_response(database_service.get_measurement(measurement_id), 200)
     except Exception as ex:
         return make_response({
             "error": str(ex)

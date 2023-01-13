@@ -30,7 +30,7 @@ class DatabaseService:
         cursor = self.db.cursor()
 
         cursor.execute('''CREATE TABLE IF NOT EXISTS Measurements
-        (ID INTEGER PRIMARY KEY AUTO_INCREMENT,
+        (Id INTEGER PRIMARY KEY AUTO_INCREMENT,
         MeasurementTime VARCHAR(50) NOT NULL DEFAULT "",
         MeasurementDate VARCHAR(50) NOT NULL DEFAULT "",
         Language VARCHAR(10) NOT NULL DEFAULT "",
@@ -88,6 +88,14 @@ class DatabaseService:
         cursor = self.db.cursor(dictionary=True)
         query = '''SELECT * FROM Measurements WHERE MeasurementDate = %s'''
         cursor.execute(query, (date,))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+    def get_by_language(self, language):
+        cursor = self.db.cursor(dictionary=True)
+        query = '''SELECT * FROM Measurements WHERE Language = %s'''
+        cursor.execute(query, (language,))
         result = cursor.fetchall()
         cursor.close()
         return result
