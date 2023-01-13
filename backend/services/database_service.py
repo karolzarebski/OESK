@@ -99,3 +99,11 @@ class DatabaseService:
         result = cursor.fetchall()
         cursor.close()
         return result
+
+    def get_by_language_and_date(self, language, date):
+        cursor = self.db.cursor(dictionary=True)
+        query = '''SELECT * FROM Measurements WHERE Language = %s AND MeasurementDate = %s'''
+        cursor.execute(query, (language, date))
+        result = cursor.fetchall()
+        cursor.close()
+        return result

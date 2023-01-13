@@ -32,6 +32,16 @@ def get_all_measurements():
         measurement_id = request.args.get("id")
 
         if language is not None:
+            content_type = request.headers.get('Content-Type')
+            if content_type == 'application/json':
+                data = request.json
+                return make_response(
+                    jsonify(
+                        database_service.get_by_language_and_date(
+                            get_language(language), datetime.strptime(data['date'], '%d/%m/%Y').date()
+                        )
+                    ), 200
+                )
             return make_response(jsonify(database_service.get_by_language(get_language(language))), 200)
         if measurement_id is not None:
             measurement = database_service.get_measurement(measurement_id)
