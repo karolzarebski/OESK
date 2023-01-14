@@ -31,7 +31,7 @@ export const DataTable = ({ data, openModal, setIdToDelete }: Props) => {
             <TableCell>N'ty wyraz ciągu</TableCell>
             <TableCell>Język</TableCell>
             <TableCell>Data wykonania</TableCell>
-            <TableCell>Czas wykonania</TableCell>
+            <TableCell>Czas wykonania [s]</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
