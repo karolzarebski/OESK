@@ -73,10 +73,17 @@ def get_dates():
 @app.route("/date", methods=['GET'])
 def get_by_date():
     try:
-        return make_response(
-            jsonify(database_service.get_by_date(datetime.strptime(request.get_json()['date'], '%d/%m/%Y').date())),
-            200
-        )
+        content_type = request.headers.get('Content-Type')
+        if content_type == 'application/json':
+            data = request.json
+            return make_response(
+                jsonify(database_service.get_by_date(datetime.strptime(data['date'], '%d/%m/%Y').date())),
+                200
+            )
+        else:
+            return make_response({
+                "error": f"Unknown Content-Type: {request.headers.get('Content-Type')}"
+            }, 400)
     except Exception as ex:
         return make_response({
             "error": str(ex)
