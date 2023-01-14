@@ -30,6 +30,7 @@ def get_all_measurements():
     try:
         language = request.args.get("language")
         measurement_id = request.args.get("id")
+        date = request.args.get("date")
 
         if language is not None:
             content_type = request.headers.get('Content-Type')
@@ -50,6 +51,12 @@ def get_all_measurements():
                     "error": "NotFound"
                 }, 404)
             return make_response(jsonify(measurement), 200)
+        if date is not None:
+            parsed_date = datetime.strptime(date, '%d%m%Y').date()
+            return make_response(
+                jsonify(database_service.get_by_date(parsed_date.strftime("%Y-%m-%d"))),
+                200
+            )
         return make_response(jsonify(database_service.get_measurements()), 200)
     except Exception as ex:
         return make_response({
@@ -64,26 +71,6 @@ def get_dates():
             set(datetime.strptime(date['MeasurementDate'], '%Y-%m-%d').date() for date in database_service.get_dates())
         )
         return make_response(jsonify([datetime.strftime(date, '%d/%m/%Y') for date in dates]), 200)
-    except Exception as ex:
-        return make_response({
-            "error": str(ex)
-        }, 500)
-
-
-@app.route("/date", methods=['GET'])
-def get_by_date():
-    try:
-        content_type = request.headers.get('Content-Type')
-        if content_type == 'application/json':
-            data = request.json
-            return make_response(
-                jsonify(database_service.get_by_date(datetime.strptime(data['date'], '%d/%m/%Y').date())),
-                200
-            )
-        else:
-            return make_response({
-                "error": f"Unknown Content-Type: {request.headers.get('Content-Type')}"
-            }, 400)
     except Exception as ex:
         return make_response({
             "error": str(ex)
