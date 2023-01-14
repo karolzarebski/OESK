@@ -1,18 +1,16 @@
-import { Modal, Typography } from "@mui/material";
+import { Modal } from "@mui/material";
 import { ModalContainer } from "../../containers/ModalContainer";
 import { Data } from "../../types/data";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
-  Filler,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 interface Props {
   showModal: boolean;
@@ -23,11 +21,9 @@ interface Props {
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
-  Filler,
   Legend
 );
 
@@ -39,7 +35,7 @@ export const options = {
       },
       title: {
         display: true,
-        text: "Czas wykonania",
+        text: "Czas wykonania [s]",
       },
     },
     x: {
@@ -75,17 +71,16 @@ export const ChartModal = ({ showModal, closeModal, data }: Props) => {
       {
         fill: true,
         label: data[0]?.Language,
-        borderColor: "rgb(53, 162, 235)",
         data: values,
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: "#1565c0",
       },
     ],
   };
 
   return (
     <Modal open={showModal} onClose={closeModal}>
-      <ModalContainer>
-        <Line options={options} data={chartData} />
+      <ModalContainer width="70rem" height="30rem">
+        <Bar options={options} data={chartData} width="150" height="50" />
       </ModalContainer>
     </Modal>
   );
