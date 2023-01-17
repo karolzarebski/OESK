@@ -80,7 +80,7 @@ def get_dates():
 def add_measurement():
     try:
         data = request.get_json()
-        if data['fibonacci_count'] <= 75:
+        if data['fibonacci_count'] <= 46:
             now = datetime.now()
             data['measurement_time'] = str(now.time())
             data['measurement_date'] = str(now.date())
