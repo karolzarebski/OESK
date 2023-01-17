@@ -8,7 +8,7 @@ import { AppContainer } from "./containers/AppContainer";
 import { DataContainer } from "./containers/DataContainer";
 import { Data } from "./types/data";
 import { DeleteModal } from "./components/DeleteModal";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { Dayjs } from "dayjs";
 import { ChartModal } from "./components/ChartModal";
 import { Filters } from "./components/Filters";
@@ -21,6 +21,7 @@ function App() {
   const [idToDelete, setIdToDelete] = useState<string>("");
   const [lang, setLang] = useState<string>("");
   const [date, setDate] = useState<Dayjs | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const closeAddModal = () => setShowAddModal(false);
   const closeDeleteModal = () => setShowDeleteModal(false);
@@ -41,7 +42,11 @@ function App() {
 
   return (
     <AppContainer>
-      <AddModal showModal={showAddModal} closeModal={closeAddModal} />
+      <AddModal
+        showModal={showAddModal}
+        closeModal={closeAddModal}
+        setLoading={setLoading}
+      />
       <ChartModal
         showModal={showChartModal}
         closeModal={closeChartModal}
@@ -54,18 +59,31 @@ function App() {
       />
       <DataContainer>
         <Typography variant="h4">Historia operacji</Typography>
-        <DataTable
-          data={data}
-          openModal={openDeleteModal}
-          setIdToDelete={setIdToDelete}
-        />
-        <Filters
-          date={date}
-          setLang={setLang}
-          setData={setData}
-          lang={lang}
-          setDate={setDate}
-        />
+        {loading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <DataTable
+              data={data}
+              openModal={openDeleteModal}
+              setIdToDelete={setIdToDelete}
+            />
+            <Filters
+              date={date}
+              setLang={setLang}
+              setData={setData}
+              lang={lang}
+              setDate={setDate}
+            />
+          </>
+        )}
       </DataContainer>
       <Box display="flex" gap="1rem">
         <Button onClick={openAddModal} variant="contained">

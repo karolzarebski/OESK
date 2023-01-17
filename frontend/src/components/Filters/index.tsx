@@ -89,10 +89,9 @@ export const Filters = ({ date, setLang, setData, lang, setDate }: Props) => {
           <DatePicker
             label="Wybierz datę"
             value={date}
-            onChange={(newValue) => {
-              setFilterDate(newValue);
-            }}
+            onChange={setFilterDate}
             renderInput={(params) => <TextField {...params} />}
+            maxDate={dayjs()}
           />
         </LocalizationProvider>
       </Box>

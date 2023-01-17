@@ -16,16 +16,21 @@ import { ModalContainer } from "../../containers/ModalContainer";
 interface Props {
   showModal: boolean;
   closeModal: () => void;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const AddModal = ({ showModal, closeModal }: Props) => {
+export const AddModal = ({ showModal, closeModal, setLoading }: Props) => {
   const [lang, setLang] = useState<string>("");
   const [fib, setFib] = useState<number>(1);
 
   const setLanguage = (event: any) => setLang(event.target.value);
-  const setFibonacci = (event: any) => setFib(event.target.value);
+  const setFibonacci = (event: any) => {
+    if (event.target.value > 75) return setFib(75);
+    return setFib(event.target.value);
+  };
 
   const handleAdd = () => {
+    setLoading(true);
     axios
       .post(`http://localhost:5000/add`, {
         language: lang,
@@ -33,6 +38,9 @@ export const AddModal = ({ showModal, closeModal }: Props) => {
       })
       .then((res) => {
         closeModal();
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       });
   };
 
@@ -56,6 +64,8 @@ export const AddModal = ({ showModal, closeModal }: Props) => {
         <TextField
           onChange={setFibonacci}
           value={fib}
+          inputProps={{ min: 1, max: 75, step: 1 }}
+          InputProps={{ inputProps: { min: 1, max: 75, step: 1 } }}
           type="number"
           variant="outlined"
           label="Numer ciągu"

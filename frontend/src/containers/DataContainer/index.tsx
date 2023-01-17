@@ -13,6 +13,7 @@ export const DataContainer = ({ children }: Props) => (
     border="1px solid black"
     borderRadius="15px"
     height="75%"
+    width="50%"
   >
     {children}
   </Box>
