@@ -38,9 +38,9 @@ export const AddModal = ({ showModal, closeModal }: Props) => {
         fibonacci_count: +fib,
       })
       .then((res) => {
-        closeModal();
         setTimeout(() => {
           setLoading(false);
+          closeModal();
         }, 1000);
       });
   };
