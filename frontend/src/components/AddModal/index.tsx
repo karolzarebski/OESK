@@ -26,7 +26,7 @@ export const AddModal = ({ showModal, closeModal }: Props) => {
 
   const setLanguage = (event: any) => setLang(event.target.value);
   const setFibonacci = (event: any) => {
-    if (event.target.value > 75) return setFib(75);
+    if (event.target.value > 46) return setFib(46);
     return setFib(event.target.value);
   };
 
