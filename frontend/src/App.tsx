@@ -9,7 +9,6 @@ import { DataContainer } from "./containers/DataContainer";
 import { Data } from "./types/data";
 import { DeleteModal } from "./components/DeleteModal";
 import { Box } from "@mui/material";
-import { Dayjs } from "dayjs";
 import { ChartModal } from "./components/ChartModal";
 import { Filters } from "./components/Filters";
 
@@ -19,8 +18,7 @@ function App() {
   const [showChartModal, setShowChartModal] = useState<boolean>(false);
   const [data, setData] = useState<Data[]>([]);
   const [idToDelete, setIdToDelete] = useState<string>("");
-  const [lang, setLang] = useState<string>("");
-  const [date, setDate] = useState<Dayjs | null>(null);
+  const [lang, setLang] = useState<number>(1);
 
   const closeAddModal = () => setShowAddModal(false);
   const closeDeleteModal = () => setShowDeleteModal(false);
@@ -30,8 +28,7 @@ function App() {
   const openChartModal = () => setShowChartModal(true);
 
   const handleGetAll = () => {
-    setLang("");
-    setDate(null);
+    setLang(1);
     axios.get(`http://localhost:5000/get`).then((res) => setData(res.data));
   };
 
@@ -61,18 +58,17 @@ function App() {
           setIdToDelete={setIdToDelete}
         />
         <Filters
-          date={date}
-          setLang={setLang}
+          setWord={setLang}
           setData={setData}
-          lang={lang}
-          setDate={setDate}
+          word={lang}
+          data={data}
         />
       </DataContainer>
       <Box display="flex" gap="1rem">
         <Button onClick={openAddModal} variant="contained">
           Dodaj nową operację
         </Button>
-        {lang && date && data.length > 0 && (
+        {lang > 1 && data.length > 0 && (
           <Button onClick={openChartModal} variant="contained">
             Pokaż wykres dla aktualnych danych
           </Button>

@@ -7,55 +7,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
-import dayjs from "dayjs";
 import axios from "axios";
 import { Data } from "../../types/data";
 
-const getFormattedDate = (value: Dayjs) => {
-  const day = value.date();
-  const month = value.month();
-  const year = value.year();
-  const formattedMonth = month < 10 ? `0${month + 1}` : month + 1;
-  return `${day}${formattedMonth}${year}`;
-};
 
 interface Props {
-  date: Dayjs | null;
-  setLang: React.Dispatch<React.SetStateAction<string>>;
+  setWord: React.Dispatch<React.SetStateAction<number>>;
   setData: React.Dispatch<React.SetStateAction<Data[]>>;
-  setDate: React.Dispatch<React.SetStateAction<Dayjs | null>>;
-  lang: string;
+  word: number;
+  data: Data[];
 }
 
-export const Filters = ({ date, setLang, setData, lang, setDate }: Props) => {
-  const setFilterLang = (event: any) => {
+export const Filters = ({ word, setWord, setData, data }: Props) => {
+  // @ts-ignore
+  const wordsList = Array.from({length:46}, (_,i) => i+1);
+
+  const setFilterWord = (event: any) => {
     const {
       target: { value },
     } = event;
-    const now = dayjs();
-    const formattedDate = getFormattedDate(date || now);
-    const link = date
-      ? `http://localhost:5000/get?language=${value}&date=${formattedDate}`
-      : `http://localhost:5000/get?language=${value}`;
-
-    setLang(value);
-    axios.get(link).then((res) => setData(res.data));
+      setWord(value);
+      axios.get(`http://localhost:5000/get?word=${value}`).then((res) => setData(res.data));
   };
 
-  const setFilterDate = (value: Dayjs | null) => {
-    if (value) {
-      const formattedDate = getFormattedDate(value);
-      const link = lang
-        ? `http://localhost:5000/get?language=${lang}&date=${formattedDate}`
-        : `http://localhost:5000/get?date=${formattedDate}`;
-      setDate(value);
-      axios.get(link).then((res) => setData(res.data));
-    }
-  };
   return (
     <Box
       display="flex"
@@ -72,28 +46,17 @@ export const Filters = ({ date, setLang, setData, lang, setDate }: Props) => {
         justifyContent="space-between"
       >
         <FormControl>
-          <InputLabel id="filter-language-select">Wybierz język</InputLabel>
+          <InputLabel id="filter-language-select">Wybierz wyraz ciągu</InputLabel>
           <Select
             sx={{ width: "30ch" }}
-            value={lang}
+            value={word}
             labelId="filter-language-select"
-            label="Wybierz język"
-            onChange={setFilterLang}
+            label="Wybierz wyraz ciągu"
+            onChange={setFilterWord}
           >
-            <MenuItem value="C">C</MenuItem>
-            <MenuItem value="Cpp">C++</MenuItem>
-            <MenuItem value="CSharp">C#</MenuItem>
+            {wordsList.map((el) => <MenuItem value={el}>{el}</MenuItem>)}
           </Select>
         </FormControl>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Wybierz datę"
-            value={date}
-            onChange={setFilterDate}
-            renderInput={(params) => <TextField {...params} />}
-            maxDate={dayjs()}
-          />
-        </LocalizationProvider>
       </Box>
     </Box>
   );

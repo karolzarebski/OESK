@@ -44,7 +44,7 @@ export const options = {
       },
       title: {
         display: true,
-        text: "N-ty wyraz",
+        text: "Język",
       },
     },
   },
@@ -61,16 +61,27 @@ export const options = {
   },
 };
 
+const getSrednia = (numbers: string[]) => {
+  let suma = 0;
+  numbers.map((el) => suma+=+el);
+  return suma/numbers.length;
+}
+
 export const ChartModal = ({ showModal, closeModal, data }: Props) => {
-  const labels = data.map((el) => el.FibonacciCount);
-  const values = data.map((el) => el.TestDuration);
+  const allLabels = data.map((el) => el.Language);
+  // @ts-ignore
+  const labels = [...new Set(allLabels)].sort();
+  const cSharp = getSrednia(data.filter((filt)=>filt.Language === "C#").map((el) => el.TestDuration));
+  const cPP = getSrednia(data.filter((filt)=>filt.Language === "C++").map((el) => el.TestDuration));
+  const pureC = getSrednia(data.filter((filt)=>filt.Language === "C").map((el) => el.TestDuration));
+  const values = [pureC,cSharp,cPP];
 
   const chartData = {
     labels,
     datasets: [
       {
         fill: true,
-        label: data[0]?.Language,
+        label: data[0]?.FibonacciCount+"",
         data: values,
         backgroundColor: "#1565c0",
       },

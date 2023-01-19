@@ -107,3 +107,11 @@ class DatabaseService:
         result = cursor.fetchall()
         cursor.close()
         return result
+
+    def get_by_word(self, word):
+        cursor = self.db.cursor(dictionary=True)
+        query = '''SELECT * FROM Measurements WHERE FibonacciCount = %s'''
+        cursor.execute(query, (word,))
+        result = cursor.fetchall()
+        cursor.close()
+        return result

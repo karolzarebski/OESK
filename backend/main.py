@@ -31,7 +31,17 @@ def get_all_measurements():
         language = request.args.get("language")
         measurement_id = request.args.get("id")
         date = request.args.get("date")
+        word = request.args.get("word")
 
+        if date is not None and language is not None:
+            parsed_date = datetime.strptime(date, '%d%m%Y').date()
+            return make_response(
+                jsonify(
+                    database_service.get_by_language_and_date(
+                        get_language(language), parsed_date.strftime("%Y-%m-%d")
+                    )
+                ), 200
+            )
         if language is not None:
             return make_response(jsonify(database_service.get_by_language(get_language(language))), 200)
         if measurement_id is not None:
@@ -41,20 +51,13 @@ def get_all_measurements():
                     "error": "NotFound"
                 }, 404)
             return make_response(jsonify(measurement), 200)
+        if word is not None:
+            return make_response(jsonify(database_service.get_by_word(word)), 200)
         if date is not None:
             parsed_date = datetime.strptime(date, '%d%m%Y').date()
             return make_response(
                 jsonify(database_service.get_by_date(parsed_date.strftime("%Y-%m-%d"))),
                 200
-            )
-        if date is not None and language is not None:
-            parsed_date = datetime.strptime(date, '%d%m%Y').date()
-            return make_response(
-                jsonify(
-                    database_service.get_by_language_and_date(
-                        get_language(language), parsed_date.strftime("%Y-%m-%d")
-                    )
-                ), 200
             )
         return make_response(jsonify(database_service.get_measurements()), 200)
     except Exception as ex:
